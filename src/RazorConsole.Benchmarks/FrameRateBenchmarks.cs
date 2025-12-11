@@ -1,5 +1,6 @@
 // Copyright (c) RazorConsole. All rights reserved.
 
+using System.Diagnostics;
 using BenchmarkDotNet.Attributes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -71,7 +72,7 @@ public class FrameRateBenchmarks
     [Benchmark(Description = "Calculate effective frame rate (simple)")]
     public async Task<double> EffectiveFrameRateSimple()
     {
-        var startTime = DateTime.UtcNow;
+        var stopwatch = Stopwatch.StartNew();
 
         for (int i = 0; i < FrameCount; i++)
         {
@@ -80,7 +81,7 @@ public class FrameRateBenchmarks
                 CancellationToken.None).ConfigureAwait(false);
         }
 
-        var elapsed = DateTime.UtcNow - startTime;
-        return FrameCount / elapsed.TotalSeconds;
+        stopwatch.Stop();
+        return FrameCount / stopwatch.Elapsed.TotalSeconds;
     }
 }

@@ -10,6 +10,8 @@ using RazorConsole.Core.Rendering;
 using RazorConsole.Core.Rendering.Translation.Contexts;
 using RazorConsole.Core.Vdom;
 
+using Spectre.Console.Rendering;
+
 namespace RazorConsole.Benchmarks;
 
 /// <summary>
@@ -25,6 +27,7 @@ public class TranslationBenchmarks
     private TranslationContext? _translationContext;
     private VNode? _simpleVNode;
     private VNode? _complexVNode;
+    private IRenderable? _lastRenderable;
 
     [GlobalSetup]
     public async Task Setup()
@@ -63,7 +66,7 @@ public class TranslationBenchmarks
     {
         if (_simpleVNode is not null)
         {
-            var renderable = _translationContext!.Translate(_simpleVNode);
+            _lastRenderable = _translationContext!.Translate(_simpleVNode);
         }
     }
 
@@ -72,7 +75,7 @@ public class TranslationBenchmarks
     {
         if (_complexVNode is not null)
         {
-            var renderable = _translationContext!.Translate(_complexVNode);
+            _lastRenderable = _translationContext!.Translate(_complexVNode);
         }
     }
 }

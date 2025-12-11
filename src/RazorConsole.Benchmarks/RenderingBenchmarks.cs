@@ -21,6 +21,7 @@ public class RenderingBenchmarks
 {
     private IServiceProvider? _serviceProvider;
     private ConsoleRenderer? _renderer;
+    private ConsoleRenderer.RenderSnapshot _lastSnapshot;
 
     [GlobalSetup]
     public void Setup()
@@ -46,7 +47,7 @@ public class RenderingBenchmarks
     [Benchmark(Description = "Render simple component")]
     public async Task RenderSimpleComponent()
     {
-        var snapshot = await _renderer!.MountComponentAsync<SimpleComponent>(
+        _lastSnapshot = await _renderer!.MountComponentAsync<SimpleComponent>(
             ParameterView.Empty,
             CancellationToken.None).ConfigureAwait(false);
     }
@@ -54,7 +55,7 @@ public class RenderingBenchmarks
     [Benchmark(Description = "Render complex component")]
     public async Task RenderComplexComponent()
     {
-        var snapshot = await _renderer!.MountComponentAsync<ComplexComponent>(
+        _lastSnapshot = await _renderer!.MountComponentAsync<ComplexComponent>(
             ParameterView.Empty,
             CancellationToken.None).ConfigureAwait(false);
     }
@@ -62,7 +63,7 @@ public class RenderingBenchmarks
     [Benchmark(Description = "Render interactive component")]
     public async Task RenderInteractiveComponent()
     {
-        var snapshot = await _renderer!.MountComponentAsync<InteractiveComponent>(
+        _lastSnapshot = await _renderer!.MountComponentAsync<InteractiveComponent>(
             ParameterView.Empty,
             CancellationToken.None).ConfigureAwait(false);
     }
