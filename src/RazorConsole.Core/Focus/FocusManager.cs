@@ -301,13 +301,10 @@ public sealed class FocusManager : IObserver<ConsoleRenderer.RenderSnapshot>
         var dispatcher = _eventDispatcher;
         if (dispatcher is null)
         {
-            Utilities.DebugFileLogger.Log($"[FocusManager] DispatchFocusEventsAsync: dispatcher is null");
             return;
         }
 
         token.ThrowIfCancellationRequested();
-
-        Utilities.DebugFileLogger.Log($"[FocusManager] DispatchFocusEventsAsync: target.Key={target.Key}, previousTarget?.Key={previousTarget?.Key}");
 
         // Dispatch focusout to the previous target. This may fail if the component was disposed
         // (e.g., during navigation), so we catch and ignore the exception to ensure the new
@@ -316,34 +313,23 @@ public sealed class FocusManager : IObserver<ConsoleRenderer.RenderSnapshot>
         {
             try
             {
-                Utilities.DebugFileLogger.Log($"[FocusManager] Dispatching onfocusout, handlerId={focusOutEvent.HandlerId}");
                 await dispatcher.DispatchAsync(focusOutEvent.HandlerId, new FocusEventArgs { Type = "focusout" }, token).ConfigureAwait(false);
-                Utilities.DebugFileLogger.Log($"[FocusManager] onfocusout dispatched");
             }
             catch (ArgumentException ex) when (ex.ParamName == "eventHandlerId")
             {
                 // The previous component was disposed (e.g., during navigation), so the event handler
                 // no longer exists. This is expected and we can safely ignore it.
-                Utilities.DebugFileLogger.Log($"[FocusManager] onfocusout skipped - handler disposed: {ex.Message}");
             }
         }
 
         if (target.Events.TryGetEvent("onfocusin", out var focusInEvent))
         {
-            Utilities.DebugFileLogger.Log($"[FocusManager] Dispatching onfocusin, handlerId={focusInEvent.HandlerId}");
             await dispatcher.DispatchAsync(focusInEvent.HandlerId, new FocusEventArgs { Type = "focusin" }, token).ConfigureAwait(false);
-            Utilities.DebugFileLogger.Log($"[FocusManager] onfocusin dispatched");
         }
 
         if (target.Events.TryGetEvent("onfocus", out var focusEvent))
         {
-            Utilities.DebugFileLogger.Log($"[FocusManager] Dispatching onfocus, handlerId={focusEvent.HandlerId}");
             await dispatcher.DispatchAsync(focusEvent.HandlerId, new FocusEventArgs { Type = "focus" }, token).ConfigureAwait(false);
-            Utilities.DebugFileLogger.Log($"[FocusManager] onfocus dispatched");
-        }
-        else
-        {
-            Utilities.DebugFileLogger.Log($"[FocusManager] No onfocus event found for target.Key={target.Key}");
         }
     }
 

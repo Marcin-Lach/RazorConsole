@@ -57,14 +57,12 @@
 
     private void OnFocus(FocusEventArgs e)
     {
-        RazorConsole.Core.Utilities.DebugFileLogger.Log($"[TextButton] OnFocus called: Content={Content}, _generatedFocusKey={_generatedFocusKey}");
         _isFocused = true;
         StateHasChanged();
     }
 
     private void OnFocusOut(FocusEventArgs e)
     {
-        RazorConsole.Core.Utilities.DebugFileLogger.Log($"[TextButton] OnFocusOut called: Content={Content}, _generatedFocusKey={_generatedFocusKey}");
         _isFocused = false;
         StateHasChanged();
     }
