@@ -737,8 +737,7 @@ internal sealed class ConsoleRenderer(
 
         try
         {
-            var task = base.DispatchEventAsync(handlerId, default, eventArgs);
-            return task;
+            return base.DispatchEventAsync(handlerId, default, eventArgs);
         }
         catch (Exception ex)
         {
